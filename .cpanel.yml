@@ -2,4 +2,8 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/premwnif/bestneighborhoodz.com/
-    - /bin/rsync -a --delete --exclude '.git' --exclude '.cpanel.yml' --exclude 'cgi-bin' ./ $DEPLOYPATH
+    # Copy files without copying the repository folder's permissions.
+    - /bin/rsync -rlt --delete --exclude '.git' --exclude '.cpanel.yml' --exclude 'cgi-bin' ./ $DEPLOYPATH
+    - /bin/chmod 755 $DEPLOYPATH
+    - /bin/find $DEPLOYPATH -type d -exec /bin/chmod 755 {} +
+    - /bin/find $DEPLOYPATH -type f -exec /bin/chmod 644 {} +
