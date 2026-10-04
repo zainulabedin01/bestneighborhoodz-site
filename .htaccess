@@ -1,0 +1,37 @@
+# Your Neighborhoodz Index: settings for Apache or LiteSpeed hosting (Namecheap).
+Options -Indexes
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+
+# The map worker is a JavaScript module, which needs this file type.
+<IfModule mod_mime.c>
+  AddType text/javascript .mjs
+  AddType application/manifest+json .webmanifest
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # One redirect to https://bestneighborhoodz.com for http and www requests
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# Compress text files
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript application/javascript application/json application/xml text/xml image/svg+xml application/manifest+json
+</IfModule>
+
+# Pages and data are re-checked every hour. Fonts and logos keep for a week.
+<IfModule mod_headers.c>
+  Header always set Strict-Transport-Security "max-age=31536000" env=HTTPS
+  Header always set X-Content-Type-Options "nosniff"
+  <FilesMatch "\.(html|txt|json|xml)$">
+    Header set Cache-Control "public, max-age=3600"
+  </FilesMatch>
+  <FilesMatch "\.(svg|png|ico|woff2?)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+</IfModule>
