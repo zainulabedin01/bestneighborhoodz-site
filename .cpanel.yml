@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/premwnif/bestneighborhoodz.com/
+    - /bin/rsync -a --delete --exclude '.git' --exclude '.cpanel.yml' --exclude 'cgi-bin' ./ $DEPLOYPATH
